@@ -24,8 +24,7 @@ type CommandDB struct {
 	CommandSubsets []CommandSubsetDB
 }
 
-func NewCommandDB() (*CommandDB, error) {
-	// var commandSubsetDBs []CommandSubsetDB
+func ReadCommandDB() (*CommandDB, error) {
 
 	commandDB := new(CommandDB)
 

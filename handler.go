@@ -41,7 +41,7 @@ func handleCommandSetByID(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleAvailableSubsets(w http.ResponseWriter, r *http.Request) {
-	DB, err := NewCommandDB()
+	DB, err := ReadCommandDB()
 	if err != nil {
 		log.Println(err)
 		return
@@ -67,7 +67,7 @@ func handleAvailableSubsets(w http.ResponseWriter, r *http.Request) {
 func handleAvailableCommandsInSubset(w http.ResponseWriter, r *http.Request) {
 	subset := r.PathValue("subset")
 
-	DB, err := NewCommandDB()
+	DB, err := ReadCommandDB()
 	if err != nil {
 		log.Println(err)
 		return

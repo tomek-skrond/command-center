@@ -3,7 +3,7 @@ package main
 import "log"
 
 func GetCommandsFromSubset(subset string, id string) *CommandSet {
-	DB, err := NewCommandDB()
+	DB, err := ReadCommandDB()
 	if err != nil {
 		log.Println(err)
 		return nil
