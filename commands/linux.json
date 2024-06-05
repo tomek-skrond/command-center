@@ -1,0 +1,22 @@
+[
+    {
+      "commands": ["rsync -avh source/ destination/"],
+      "description": "Synchronizes files and directories between two locations.",
+      "short_description": "rsync-basic"
+    },
+    {
+        "commands": ["find /path -name 'filename'"],
+        "description": "Finds files with the specified name",
+        "short_description": "list-with-name"
+    },
+    {
+        "commands": ["find /path -type f -mtime -7"],
+        "description": "Finds files modified in the last 7 days.",
+        "short_description": "files-modified"
+    },
+    {
+        "commands": ["sed -n '1,10p' file.txt"],
+        "description": "Prints lines 1 to 10.",
+        "short_description": "sed-print-lines"
+    }
+]

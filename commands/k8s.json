@@ -1,0 +1,194 @@
+[
+    {
+      "commands": ["kubectl get services"],
+      "description": "List all services in the namespace",
+      "short_description": "list-services"
+    },
+    {
+      "commands": ["kubectl get pods --all-namespaces"],
+      "description": "List all pods in all namespaces",
+      "short_description": "list-all-pods"
+    },
+    {
+      "commands": ["kubectl get pods -o wide"],
+      "description": "List all pods in the current namespace, with more details",
+      "short_description": "list-pods-details"
+    },
+    {
+      "commands": ["kubectl get deployment my-dep"],
+      "description": "List a particular deployment",
+      "short_description": "list-deployment"
+    },
+    {
+      "commands": ["kubectl get pods"],
+      "description": "List all pods in the namespace",
+      "short_description": "list-pods"
+    },
+    {
+      "commands": ["kubectl get pod my-pod -o yaml"],
+      "description": "Get a pod's YAML",
+      "short_description": "get-pod-yaml"
+    },
+    {
+      "commands": ["kubectl describe nodes my-node"],
+      "description": "Describe a particular node with verbose output",
+      "short_description": "describe-node"
+    },
+    {
+      "commands": ["kubectl describe pods my-pod"],
+      "description": "Describe a particular pod with verbose output",
+      "short_description": "describe-pod"
+    },
+    {
+      "commands": ["kubectl get services --sort-by=.metadata.name"],
+      "description": "List Services Sorted by Name",
+      "short_description": "list-services-name"
+    },
+    {
+      "commands": ["kubectl get pods --sort-by='.status.containerStatuses[0].restartCount'"],
+      "description": "List pods Sorted by Restart Count",
+      "short_description": "list-pods-restarts"
+    },
+    {
+      "commands": ["kubectl get pv --sort-by=.spec.capacity.storage"],
+      "description": "List PersistentVolumes sorted by capacity",
+      "short_description": "list-pv-capacity"
+    },
+    {
+      "commands": ["kubectl get pods --selector=app=cassandra -o jsonpath='{.items[*].metadata.labels.version}'"],
+      "description": "Get the version label of all pods with label app=cassandra",
+      "short_description": "get-pod-version"
+    },
+    {
+      "commands": ["kubectl get configmap myconfig -o jsonpath='{.data.ca.crt}'"],
+      "description": "Retrieve the value of a key with dots, e.g. 'ca.crt'",
+      "short_description": "get-configmap-key"
+    },
+    {
+      "commands": ["kubectl get secret my-secret --template='{{index .data \"key-name-with-dashes\"}}'"],
+      "description": "Retrieve a base64 encoded value with dashes instead of underscores.",
+      "short_description": "get-secret-key"
+    },
+    {
+      "commands": ["kubectl get node --selector='!node-role.kubernetes.io/control-plane'"],
+      "description": "Get all worker nodes (exclude control-plane nodes)",
+      "short_description": "get-worker-nodes"
+    },
+    {
+      "commands": ["kubectl get pods --field-selector=status.phase=Running"],
+      "description": "Get all running pods in the namespace",
+      "short_description": "get-running-pods"
+    },
+    {
+      "commands": ["kubectl get nodes -o jsonpath='{.items[*].status.addresses[?(@.type==\"ExternalIP\")].address}'"],
+      "description": "Get ExternalIPs of all nodes",
+      "short_description": "get-node-externalips"
+    },
+    {
+      "commands": [
+        "sel=${$(kubectl get rc my-rc --output=json | jq -j '.spec.selector | to_entries | .[] | \"\\(.key)=\\(.value),\"')%?};",
+        "echo $(kubectl get pods --selector=$sel --output=jsonpath={.items..metadata.name})"
+      ],
+      "description": "List Names of Pods that belong to a Particular RC",
+      "short_description": "list-rc-pods"
+    },
+    {
+      "commands": ["kubectl get pods --show-labels"],
+      "description": "Show labels for all pods (or any other Kubernetes object that supports labelling)",
+      "short_description": "show-pod-labels"
+    },
+    {
+      "commands": [
+        "JSONPATH='{range .items[*]}{@.metadata.name}:{range @.status.conditions[*]}{@.type}={@.status};{end}{end}' &&",
+        "kubectl get nodes -o jsonpath=\"$JSONPATH\" | grep \"Ready=True\""
+      ],
+      "description": "Check which nodes are ready",
+      "short_description": "check-nodes-ready"
+    },
+    {
+      "commands": ["kubectl get node -o custom-columns='NODE_NAME:.metadata.name,STATUS:.status.conditions[?(@.type==\"Ready\")].status'"],
+      "description": "Check which nodes are ready with custom-columns",
+      "short_description": "check-nodes-columns"
+    },
+    {
+      "commands": ["kubectl get secret my-secret -o go-template='{{range $k,$v := .data}}{{\"### \"}}{{$k}}{{\"\\n\"}}{{$v|base64decode}}{{\"\\n\\n\"}}{{end}}'"],
+      "description": "Output decoded secrets without external tools",
+      "short_description": "decode-secrets"
+    },
+    {
+      "commands": ["kubectl get pods -o json | jq '.items[].spec.containers[].env[]?.valueFrom.secretKeyRef.name' | grep -v null | sort | uniq"],
+      "description": "List all Secrets currently in use by a pod",
+      "short_description": "list-pod-secrets"
+    },
+    {
+      "commands": [
+        "kubectl get pods --all-namespaces -o jsonpath='{range .items[*].status.initContainerStatuses[*]}{.containerID}{\"\\n\"}{end}' |",
+        "cut -d/ -f3"
+      ],
+      "description": "List all containerIDs of initContainer of all pods",
+      "short_description": "list-init-containers"
+    },
+    {
+      "commands": ["kubectl get events --sort-by=.metadata.creationTimestamp"],
+      "description": "List Events sorted by timestamp",
+      "short_description": "list-events-timestamp"
+    },
+    {
+      "commands": ["kubectl events --types=Warning"],
+      "description": "List all warning events",
+      "short_description": "list-warning-events"
+    },
+    {
+      "commands": ["kubectl diff -f ./my-manifest.yaml"],
+      "description": "Compare current state against manifest state",
+      "short_description": "compare-manifest"
+    },
+    {
+      "commands": ["kubectl get nodes -o json | jq -c 'paths|join(\".\")'"],
+      "description": "Produce a period-delimited tree of all keys returned for nodes",
+      "short_description": "tree-node-keys"
+    },
+    {
+      "commands": ["kubectl get pods -o json | jq -c 'paths|join(\".\")'"],
+      "description": "Produce a period-delimited tree of all keys returned for pods",
+      "short_description": "tree-pod-keys"
+    },
+    {
+      "commands": [
+        "for pod in $(kubectl get po --output=jsonpath={.items..metadata.name}); do",
+        "echo $pod && kubectl exec -it $pod -- env;",
+        "done"
+      ],
+      "description": "Produce ENV for all pods",
+      "short_description": "produce-env-pods"
+    },
+    {
+      "commands": ["kubectl get deployment nginx-deployment --subresource=status"],
+      "description": "Get a deployment's status subresource",
+      "short_description": "get-deployment-status"
+    },
+    {
+      "commands":[
+        "kubectl create svc loadbalancer test --tcp=80:80 --dry-run=client -o yaml",
+        "kubectl create deployment test --image=nginx:latest --replicas=3 --dry-run=client -o yaml"
+      ],
+      "description": "Creating an nginx pod yaml declaratively using kubectl",
+      "short_description": "dryrun-nginx"
+    },
+    {
+      "commands": ["kubectl get po --all-namespaces | awk '{if ($4 ~ /Evicted/) system (\"kubectl -n \" $1 \" delete pods \" $2)}'"],
+      "description": "Remove all pods with status 'Evicted'",
+      "short_description": "remove-evicted-pods"
+    },
+    {
+      "commands": ["kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath=\"{.data.password}\" | base64 -d"],
+      "description": "Decrypt ArgoCD password",
+      "short_description": "argocd-decrypt"
+    },
+    {
+      "commands": ["kubectl exec --namespace $namespace -it $(kubectl get pods --namespace $namespace -l \"app.kubernetes.io/name=grafana\" -o jsonpath=\"{.items[0].metadata.name}\") -- grafana cli admin reset-admin-password myNewPassword"],
+      "description": "Reset Grafana password",
+      "short_description": "grafana-password-reset"
+    }
+  ]
+  
