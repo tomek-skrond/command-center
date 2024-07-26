@@ -11,13 +11,23 @@ import (
 
 var DB = CommandDB{}
 
-func main() {
-	r := http.NewServeMux()
-
-	// r.HandleFunc("GET /command/{id}", handleCommandByID)
+func apiVersion1(r *http.ServeMux) {
 	r.HandleFunc("GET /command/{subset}/{id}", handleCommandSetByID)
 	r.HandleFunc("GET /available/subset", handleAvailableSubsets)
 	r.HandleFunc("GET /available/subset/{subset}", handleAvailableCommandsInSubset)
+}
+
+func apiVersion2(r *http.ServeMux) {
+	r.HandleFunc("GET /v2/command/subset/{subset}/{id}", handleCommandSetByID)
+	r.HandleFunc("GET /v2/command/subset/{subset}", handleAvailableCommandsInSubset)
+	r.HandleFunc("GET /v2/command/subset", handleAvailableSubsets)
+}
+
+func main() {
+	r := http.NewServeMux()
+
+	apiVersion1(r)
+	apiVersion2(r)
 
 	log.Fatalln(http.ListenAndServe(":2137", r))
 }

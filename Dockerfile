@@ -11,3 +11,5 @@ RUN go mod download && go mod verify
 RUN go build -o commandcenter ./...
 
 CMD ["./commandcenter"]
+
+EXPOSE 2137
