@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 )
 
 //	func handleCommandByID(w http.ResponseWriter, r *http.Request) {
@@ -24,9 +25,30 @@ func apiVersion2(r *http.ServeMux) {
 	r.HandleFunc("GET /v2/command/subset", handleAvailableSubsets)
 }
 
+func initDatabase() (*PostgresStorage, error) {
+	testenv := os.Getenv("ENV")
+
+	if testenv == "test" {
+		s, err := NewPostgresStorage(WithTestEnv())
+		if err != nil {
+			return nil, err
+		}
+		return s, nil
+	}
+
+	if testenv != "prod" {
+		s, err := NewPostgresStorage(WithProdEnv())
+		if err != nil {
+			return nil, err
+		}
+		return s, nil
+	}
+
+	return nil, fmt.Errorf("no such environment")
+}
 func main() {
 
-	s, err := NewPostgresStorage(WithTestEnv())
+	s, err := initDatabase()
 	if err != nil {
 		log.Fatalln(err)
 	}
