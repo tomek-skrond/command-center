@@ -13,7 +13,7 @@ services:
       - "5432:5432"
 
   cmc:
-    build: .
+    build: ./src/
     container_name: cmc
     restart: on-failure
     environment:
