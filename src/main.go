@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 )
@@ -24,6 +25,13 @@ func apiVersion2(r *http.ServeMux) {
 }
 
 func main() {
+
+	s, err := NewPostgresStorage(WithTestEnv())
+	if err != nil {
+		log.Fatalln(err)
+	}
+	fmt.Println(s)
+
 	r := http.NewServeMux()
 
 	apiVersion1(r)
