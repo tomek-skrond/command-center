@@ -2,9 +2,12 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 const (
@@ -16,8 +19,10 @@ const (
 )
 
 type Storage interface {
-	NewCommandSubset(subsetName string)
-	NewCommandSet(subsetName string, commands []CommandSet)
+	CreateCommandSubset(subsetName string) error
+	CreateCommandSet(subsetName string, commandset CommandSet) error
+	GetCommandSubsets(subsetName string) ([]CommandSubset, error)
+	GetCommandSet(subsetName, shortDescription string)
 }
 
 type PostgresStorage struct {
@@ -39,10 +44,10 @@ func WithTestEnv() func(*PostgresStorage) {
 
 func WithProdEnv() func(*PostgresStorage) {
 	return func(s *PostgresStorage) {
-		user := os.Getenv("USER")
-		password := os.Getenv("PASSWORD")
-		host := os.Getenv("HOST")
-		db := os.Getenv("DB")
+		user := os.Getenv("POSTGRES_USER")
+		password := os.Getenv("POSTGRES_PASSWORD")
+		host := os.Getenv("POSTGRES_HOST")
+		db := os.Getenv("POSTGRES_DB")
 		sslmode := os.Getenv("SSLMODE")
 
 		s.config = NewStorageConfig(
@@ -73,8 +78,21 @@ func NewPostgresStorage(opts ...func(*PostgresStorage)) (*PostgresStorage, error
 
 	fmt.Println(connStr)
 
+	db, err := gorm.Open(postgres.Open(connStr), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	})
+
+	if err != nil {
+		log.Fatalln(err)
+		return nil, err
+	}
+
+	if db.AutoMigrate(&CommandSet{}, &CommandSubset{}) != nil {
+		return nil, err
+	}
+
 	return &PostgresStorage{
 		ps.config,
-		nil,
+		db,
 	}, nil
 }

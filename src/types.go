@@ -7,12 +7,20 @@ import (
 	"log"
 	"os"
 	"strings"
+
+	uuid "github.com/google/uuid"
 )
 
 type CommandSet struct {
-	Description      string   `json:"description"`
-	ShortDescription string   `json:"short_description"`
-	Commands         []string `json:"commands"`
+	CommandSetID     uuid.UUID `gorm:"primaryKey" json:"id"`
+	Description      string    `json:"description"`
+	ShortDescription string    `json:"short_description"`
+	Commands         []string  `json:"commands"`
+}
+
+type CommandSubset struct {
+	ID         uuid.UUID `gorm:"primaryKey" json:"id"`
+	SubsetName string    `gorm:"foreignKey:CommandSetID" json:"subset_name"`
 }
 
 type CommandSubsetDB struct {
